@@ -1,11 +1,9 @@
-import dotenv from "dotenv";
 import app from "./app.js";
 import logger from "./utils/logger.js";
 import initServices from "./services/initialServices.js";
+import config from "./config/index.js";
 
-dotenv.config();
-
-const PORT = process.env.PORT || 3000;
+const PORT = config.port;
 // Start the server
 const startServer = async () => {
   try {
