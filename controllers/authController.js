@@ -1,9 +1,10 @@
-const User = require("../models/User");
-const jwt = require("jsonwebtoken");
-const nodemailer = require("nodemailer");
+import { UserCollection as User } from "../models/User.js";
+import jwt from "jsonwebtoken";
+import nodemailer from "nodemailer";
+import crypto from "crypto";
 
 // Register user
-exports.registerUser = async (req, res) => {
+export const registerUser = async (req, res) => {
   try {
     const { name, email, password, role } = req.body;
 
@@ -28,7 +29,7 @@ exports.registerUser = async (req, res) => {
 };
 
 // Login user
-exports.loginUser = async (req, res) => {
+export const loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
 
@@ -52,7 +53,7 @@ exports.loginUser = async (req, res) => {
   }
 };
 
-exports.forgotPassword = async (req, res) => {
+export const forgotPassword = async (req, res) => {
   try {
     const { email } = req.body;
     let user = await User.findOne({ email });
@@ -92,7 +93,7 @@ exports.forgotPassword = async (req, res) => {
 };
 
 // Reset password (after clicking the reset link)
-exports.resetPassword = async (req, res) => {
+export const resetPassword = async (req, res) => {
   try {
     const { resetToken, newPassword } = req.body;
 
@@ -118,7 +119,7 @@ exports.resetPassword = async (req, res) => {
   }
 };
 
-exports.refreshToken = async (req, res) => {
+export const refreshToken = async (req, res) => {
   const refreshToken = req.header("x-refresh-token");
 
   if (!refreshToken)
