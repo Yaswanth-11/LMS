@@ -15,7 +15,7 @@ const register = async (name, email, password, role) => {
   user = new User({ name, email, password, role });
   await user.save();
 
-  const token = jwt.sign({ id: user._id, role: user.role }, config.jwt_secret, {
+  const token = jwt.sign({ id: user._id, role: user.role }, config.jwt.secret, {
     expiresIn: "1h",
   });
 
@@ -37,7 +37,7 @@ const login = async (email, password) => {
     throw error;
   }
 
-  const token = jwt.sign({ id: user._id, role: user.role }, config.jwt_secret, {
+  const token = jwt.sign({ id: user._id, role: user.role }, config.jwt.secret, {
     expiresIn: "1h",
   });
 
@@ -102,7 +102,7 @@ const refreshAuthToken = async (refreshToken) => {
     throw error;
   }
 
-  const decoded = jwt.verify(refreshToken, config.jwt_secret);
+  const decoded = jwt.verify(refreshToken, config.jwt.secret);
   const user = await User.findById(decoded.id);
 
   if (!user) {
@@ -113,7 +113,7 @@ const refreshAuthToken = async (refreshToken) => {
 
   const newToken = jwt.sign(
     { id: user._id, role: user.role },
-    config.jwt_secret,
+    config.jwt.secret,
     { expiresIn: "1h" }
   );
 

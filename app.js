@@ -1,5 +1,6 @@
 import express from "express";
 import cors from "cors";
+import helmet from "helmet";
 import bodyParser from "body-parser";
 import { router as allRoutes } from "./routes/index.js";
 import morganMiddleware from "./middlewares/morganMiddleware.js";
