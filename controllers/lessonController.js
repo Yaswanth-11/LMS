@@ -1,3 +1,6 @@
+import { Lesson } from "../models/Lesson.js";
+import { Course } from "../models/Course.js";
+
 const addLessonToCourse = async (req, res, next) => {
   try {
     const { courseId } = req.params;

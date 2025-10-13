@@ -1,51 +1,29 @@
 import winston from "winston";
 import "winston-daily-rotate-file";
 
-const { combine, timestamp, printf, errors, json, align } = winston.format;
+const { combine, timestamp, printf, errors, json } = winston.format;
 
-// Custom log format
-const customLogFormat = printf(
-  ({ level, message, cause, timestamp, stack, meta }) => {
-    const logMessage = `[${timestamp}] ${level}: ${message}`;
-    const causeMessage = cause ? ` Cause: ${JSON.stringify(cause)}` : "";
-    const stackMessage = stack ? ` Stack: ${stack}` : "";
-    const metaMessage = meta ? ` Meta: ${JSON.stringify(meta)}` : "";
-    return `${logMessage}${causeMessage}${stackMessage}${metaMessage}`;
-  }
-);
-
-const logsPath = process.env.LOGS_PATH || "./logs";
-
-// File rotation for daily logs
-const fileRotateTransport = new winston.transports.DailyRotateFile({
-  filename: `${logsPath}/application-%DATE%.log`,
-  datePattern: "YYYY-MM-DD",
-});
-
-// Console transport for development
-const consoleTransport = new winston.transports.Console({
-  format: combine(
-    winston.format.colorize(),
-    printf(({ level, message, timestamp }) => {
-      return `[${timestamp}] ${level}: ${message}`;
-    })
-  ),
+const logFormat = printf(({ level, message, timestamp, stack }) => {
+  return `${timestamp} ${level}: ${stack || message}`;
 });
 
 const logger = winston.createLogger({
   level: process.env.LOG_LEVEL || "info",
   format: combine(
+    winston.format.colorize(),
+    timestamp({ format: "YYYY-MM-DD HH:mm:ss" }),
     errors({ stack: true }),
-    timestamp({
-      format: "YYYY-MM-DD hh:mm:ss.SSS A",
-    }),
-    align(),
-    json(),
-    customLogFormat
+    logFormat
   ),
   transports: [
-    fileRotateTransport,
-    ...(process.env.NODE_ENV != "production" ? [consoleTransport] : []),
+    new winston.transports.Console(),
+    new winston.transports.DailyRotateFile({
+      filename: "logs/application-%DATE%.log",
+      datePattern: "YYYY-MM-DD-HH",
+      zippedArchive: true,
+      maxSize: "20m",
+      maxFiles: "14d",
+    }),
   ],
 });
 

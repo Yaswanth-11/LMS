@@ -1,3 +1,6 @@
+import { Enrollment } from "../models/Enrollment.js";
+import { Course } from "../models/Course.js";
+
 const enroll = async (req, res, next) => {
   try {
     const user = req.user;
