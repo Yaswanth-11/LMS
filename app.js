@@ -4,7 +4,7 @@ import helmet from "helmet";
 import bodyParser from "body-parser";
 import { router as allRoutes } from "./routes/index.js";
 import morganMiddleware from "./middlewares/morganMiddleware.js";
-import errorHandler from "./middleware/errorHandler.js";
+import { errorHandler } from "./middleware/errorHandler.js";
 import logger from "./utils/logger.js";
 
 const app = express();

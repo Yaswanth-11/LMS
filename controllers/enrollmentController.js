@@ -1,61 +1,50 @@
-import { Enrollment } from "../models/Enrollment.js";
-import { Course } from "../models/Course.js";
+import * as EnrollmentService from "../services/EnrollmentService.js";
 
-const enroll = async (req, res, next) => {
+export const enrollUser = async (req, res) => {
   try {
-    const user = req.user;
     const { courseId } = req.body;
-
-    // check course exists
-    const course = await Course.findById(courseId);
-    if (!course) {
-      return res.status(404).json({ message: "Course not found" });
-    }
-
-    // check existing enrollment
-    const existing = await Enrollment.findOne({
-      user: user.userId,
-      course: courseId,
-    });
-    if (existing) {
-      return res.status(400).json({ message: "Already enrolled" });
-    }
-
-    const enrollment = await Enrollment.create({
-      user: user.userId,
-      course: courseId,
-    });
-    res.status(201).json(enrollment);
+    const userId = req.user._id; // from auth middleware
+    const enrollment = await EnrollmentService.enrollUser(userId, courseId);
+    res.status(201).json({ message: "Enrolled successfully", enrollment });
   } catch (err) {
-    next(err);
+    res.status(400).json({ error: err.message });
   }
 };
 
-const getMyCourses = async (req, res, next) => {
+export const getEnrollment = async (req, res) => {
   try {
-    const user = req.user;
-    // get enrollments and populate course data
-    const enrollments = await Enrollment.find({ user: user.userId }).populate({
-      path: "course",
-      populate: { path: "instructor", select: "name email" },
-    });
-    // you might want to return course + enrollment info
-    const result = enrollments.map((enr) => {
-      return {
-        enrollmentId: enr._id,
-        course: enr.course,
-        enrolledAt: enr.enrolledAt,
-        status: enr.status,
-        lastAccessedAt: enr.lastAccessedAt,
-      };
-    });
-    res.json(result);
+    const { courseId } = req.params;
+    const userId = req.user._id;
+    const enrollment = await EnrollmentService.getEnrollment(userId, courseId);
+    res.json(enrollment);
   } catch (err) {
-    next(err);
+    res.status(404).json({ error: err.message });
   }
 };
 
-export default {
-  enroll,
-  getMyCourses,
+export const updateLessonProgress = async (req, res) => {
+  try {
+    const { courseId, lessonId } = req.params;
+    const { completed } = req.body;
+    const userId = req.user._id;
+    const updated = await EnrollmentService.updateLessonProgress(
+      userId,
+      courseId,
+      lessonId,
+      completed
+    );
+    res.json({ message: "Progress updated", enrollment: updated });
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+};
+
+export const getUserEnrollments = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const enrollments = await EnrollmentService.getUserEnrollments(userId);
+    res.json(enrollments);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 };

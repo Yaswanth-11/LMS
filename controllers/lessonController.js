@@ -1,48 +1,19 @@
-import { Lesson } from "../models/Lesson.js";
-import { Course } from "../models/Course.js";
+import * as lessonService from "../services/lessonService.js";
 
-const addLessonToCourse = async (req, res, next) => {
+export const createLesson = async (req, res) => {
   try {
-    const { courseId } = req.params;
-    const user = req.user;
-
-    // check whether the user is instructor for that course (authorization)
-    const course = await Course.findById(courseId);
-    if (!course) {
-      return res.status(404).json({ message: "Course not found" });
-    }
-    if (course.instructor.toString() !== user.userId && user.role !== "admin") {
-      return res.status(403).json({ message: "Not permitted to add lessons" });
-    }
-
-    const { title, contentType, contentUrl, contentText, order, duration } =
-      req.body;
-    const lesson = await Lesson.create({
-      course: courseId,
-      title,
-      contentType,
-      contentUrl,
-      contentText,
-      order,
-      duration,
-    });
+    const lesson = await lessonService.createLesson(req.body);
     res.status(201).json(lesson);
   } catch (err) {
-    next(err);
+    res.status(500).json({ message: err.message });
   }
 };
 
-const getLessonsOfCourse = async (req, res, next) => {
+export const getLessonsByModule = async (req, res) => {
   try {
-    const { courseId } = req.params;
-    const lessons = await Lesson.find({ course: courseId }).sort("order");
+    const lessons = await lessonService.getLessonsByModule(req.params.moduleId);
     res.json(lessons);
   } catch (err) {
-    next(err);
+    res.status(500).json({ message: err.message });
   }
-};
-
-export default {
-  addLessonToCourse,
-  getLessonsOfCourse,
 };
