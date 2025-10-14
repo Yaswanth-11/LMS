@@ -11,7 +11,7 @@ const initServices = async () => {
     // Initialize Redis
     logger.info("Initializing Redis...");
 
-    redisObj = await nodeRedisDemo();
+    redisObj = "hello"; //await nodeRedisDemo();
 
     mongoResult = await connectToMongoDB();
 
