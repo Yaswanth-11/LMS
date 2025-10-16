@@ -1,4 +1,4 @@
-const markLessonComplete = async (req, res, next) => {
+export const markLessonComplete = async (req, res, next) => {
   try {
     const user = req.user;
     const { courseId, lessonId } = req.body;
@@ -34,7 +34,7 @@ const markLessonComplete = async (req, res, next) => {
   }
 };
 
-const getCourseProgress = async (req, res, next) => {
+export const getCourseProgress = async (req, res, next) => {
   try {
     const user = req.user;
     const { courseId } = req.params;

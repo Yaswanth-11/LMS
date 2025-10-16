@@ -1,9 +1,10 @@
 import { Router } from "express";
-import lessonController from "../controllers/lessonControllerjs";
+import {
+  createLesson,
+  getLessonsByModule,
+} from "../controllers/lessonController.js";
 
 export const router = Router();
 
-router.post("/:courseId", lessonController.addLessonToCourse);
-router.get("/:courseId", lessonController.getLessonsOfCourse);
-
-export { router };
+router.post("/:courseId", createLesson);
+router.get("/:courseId", getLessonsByModule);

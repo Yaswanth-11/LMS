@@ -1,5 +1,5 @@
 import { Router } from "express";
-import progressController from "../controllers/progressController.js";
+import * as progressController from "../controllers/progressController.js";
 
 export const router = Router();
 
@@ -8,5 +8,3 @@ router.post("/complete", progressController.markLessonComplete);
 
 // get progress for a course (list of lessons with status)
 router.get("/:courseId", progressController.getCourseProgress);
-
-export { router };

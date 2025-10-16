@@ -1,15 +1,14 @@
 import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
 import dotenv from "dotenv";
-import { User } from "./models/User.js";
+import { UserCollection as User } from "./models/User.js";
 import { College } from "./models/College.js";
-import { Course } from "./models/Course.js";
-import { Module } from "./models/Module.js";
-import { Lesson } from "./models/Lesson.js";
-import { Enrollment } from "./models/Enrollment.js";
-import { Challenge } from "./models/Challenge.js";
-import { Story } from "./models/Story.js";
-import { Progress } from "./models/Progress.js";
+import { CourseCollection as Course } from "./models/Course.js";
+import { ModuleCollection as Module } from "./models/Module.js";
+import { LessonCollection as Lesson } from "./models/Lesson.js";
+import { EnrollmentCollection as Enrollment } from "./models/Enrollment.js";
+import { Challenge, Story } from "./models/Challenge.js";
+import { ProgressCollection as Progress } from "./models/Progress.js";
 
 dotenv.config();
 

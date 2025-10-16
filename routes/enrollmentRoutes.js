@@ -6,7 +6,7 @@ import {
   getUserEnrollments,
 } from "../controllers/enrollmentController.js";
 
-const router = express.Router();
+export const router = express.Router();
 
 // POST /api/enrollments
 router.post("/", enrollUser);
@@ -19,5 +19,3 @@ router.get("/:courseId", getEnrollment);
 
 // PATCH /api/enrollments/:courseId/lessons/:lessonId
 router.patch("/:courseId/lessons/:lessonId", updateLessonProgress);
-
-export default router;
